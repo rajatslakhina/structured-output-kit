@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" font-family="'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="920" height="600" rx="10" fill="#0d1117"/>
+  <rect x="0" y="0" width="920" height="34" rx="10" fill="#161b22"/>
+  <rect x="0" y="24" width="920" height="10" fill="#161b22"/>
+  <circle cx="20" cy="17" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="17" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="17" r="6" fill="#27c93f"/>
+  <text x="460" y="21" text-anchor="middle" font-size="12" fill="#8b949e">structured-output-kit &#8212; swift run StructuredOutputDemo</text>
+
+  <g font-size="13" fill="#c9d1d9">
+    <text x="20" y="60"><tspan fill="#58a6ff">$</tspan> swift run StructuredOutputDemo</text>
+    <text x="20" y="86" fill="#7ee787">== StructuredOutputKit demo ==</text>
+
+    <text x="20" y="118" fill="#8b949e">Respond with a single JSON value for a WeatherReport, matching exactly this shape:</text>
+    <text x="20" y="140" fill="#8b949e">{</text>
+    <text x="20" y="162" fill="#8b949e">&#160;&#160;"city": string &#8212; The city the report is for,</text>
+    <text x="20" y="184" fill="#8b949e">&#160;&#160;"conditions": one of "clear" | "cloudy" | "rain" | "storm",</text>
+    <text x="20" y="206" fill="#8b949e">&#160;&#160;"isRainExpected": true | false &#8212; Whether rain is expected in the next few hours,</text>
+    <text x="20" y="228" fill="#8b949e">&#160;&#160;"temperatureCelsius": number &#8212; Current temperature in Celsius</text>
+    <text x="20" y="250" fill="#8b949e">}</text>
+    <text x="20" y="272" fill="#8b949e">Respond with ONLY the JSON value &#8212; no prose, no Markdown code fences.</text>
+
+    <text x="20" y="304"><tspan fill="#d2a8ff">[claude-sonnet (clean JSON)]</tspan> decoded:</text>
+    <text x="20" y="326">&#160;&#160;WeatherReport(city: "Bengaluru", temperatureCelsius: 27.5, conditions: "cloudy", isRainExpected: true)</text>
+    <text x="20" y="352"><tspan fill="#d2a8ff">[gpt-4o (fenced JSON with prose)]</tspan> decoded:</text>
+    <text x="20" y="374">&#160;&#160;WeatherReport(city: "Mumbai", temperatureCelsius: 31.0, conditions: "storm", isRainExpected: true)</text>
+    <text x="20" y="400"><tspan fill="#d2a8ff">[gpt-4o-mini (self-repairing)]</tspan> previous attempt was rejected:</text>
+    <text x="20" y="422" fill="#f0883e">&#160;&#160;Response JSON did not match the expected schema:</text>
+    <text x="20" y="444" fill="#f0883e">&#160;&#160;$.isRainExpected is required but missing</text>
+    <text x="20" y="470"><tspan fill="#d2a8ff">[gpt-4o-mini (self-repairing)]</tspan> decoded after a repair round-trip:</text>
+    <text x="20" y="492">&#160;&#160;WeatherReport(city: "Chennai", temperatureCelsius: 33.2, conditions: "clear", isRainExpected: false)</text>
+
+    <text x="20" y="524" fill="#7ee787">Demo complete: 3/3 responses successfully decoded into WeatherReport.</text>
+    <text x="20" y="560" fill="#58a6ff">$<tspan fill="#c9d1d9"> </tspan><tspan fill="#8b949e">&#9615;</tspan></text>
+  </g>
+</svg>

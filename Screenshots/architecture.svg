@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 565" font-family="'SF Mono', Menlo, Consolas, monospace">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="920" height="565" fill="#ffffff"/>
+  <text x="460" y="26" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f2328">StructuredOutputKit architecture</text>
+
+  <!-- Cluster: Your App -->
+  <rect x="260" y="42" width="400" height="112" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="272" y="60" font-size="12" fill="#57606a">Your App</text>
+  <text x="460" y="76" text-anchor="middle" font-size="10.5" fill="#57606a">Response model conforms to JSONSchemaConvertible</text>
+  <rect x="360" y="86" width="200" height="48" rx="6" fill="#ddf4ff" stroke="#0969da"/>
+  <text x="460" y="115" text-anchor="middle" font-size="13" fill="#1f2328">SwiftUI / App Logic</text>
+
+  <!-- Cluster: ProviderGatewayKit -->
+  <rect x="160" y="180" width="600" height="100" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="172" y="198" font-size="12" fill="#57606a">ProviderGatewayKit</text>
+  <rect x="230" y="206" width="200" height="48" rx="6" fill="#ddf4ff" stroke="#0969da"/>
+  <text x="330" y="235" text-anchor="middle" font-size="13" fill="#1f2328">LLMSession (actor)</text>
+  <rect x="490" y="206" width="200" height="48" rx="6" fill="#ddf4ff" stroke="#0969da"/>
+  <text x="590" y="235" text-anchor="middle" font-size="13" fill="#1f2328">ProviderRouter (actor)</text>
+  <line x1="430" y1="230" x2="488" y2="230" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Cluster: StructuredOutputKit -->
+  <rect x="60" y="320" width="800" height="225" rx="8" fill="#fff8f0" stroke="#d0d7de"/>
+  <text x="72" y="338" font-size="12" fill="#57606a">StructuredOutputKit (this package)</text>
+
+  <rect x="90" y="360" width="170" height="48" rx="6" fill="#fff1e5" stroke="#bc4c00"/>
+  <text x="175" y="389" text-anchor="middle" font-size="13" fill="#1f2328">PromptBuilder</text>
+  <text x="175" y="425" text-anchor="middle" font-size="10" fill="#57606a">generates the schema</text>
+  <text x="175" y="440" text-anchor="middle" font-size="10" fill="#57606a">instructions for your prompt</text>
+
+  <rect x="340" y="360" width="240" height="48" rx="6" fill="#fff1e5" stroke="#bc4c00"/>
+  <text x="460" y="389" text-anchor="middle" font-size="13" fill="#1f2328">StructuredOutputDecoder</text>
+
+  <rect x="650" y="354" width="170" height="60" rx="6" fill="#fff1e5" stroke="#bc4c00"/>
+  <text x="735" y="377" text-anchor="middle" font-size="12" fill="#1f2328">JSONExtractor</text>
+  <text x="735" y="397" text-anchor="middle" font-size="12" fill="#1f2328">SchemaValidator</text>
+
+  <rect x="340" y="444" width="240" height="48" rx="6" fill="#fdf2f8" stroke="#bf3989"/>
+  <text x="460" y="473" text-anchor="middle" font-size="13" fill="#1f2328">JSONSchema / JSONValue</text>
+
+  <!-- Edges -->
+  <line x1="400" y1="134" x2="372" y2="204" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="404" y="172" font-size="11" fill="#57606a">1 &#183; send prompt</text>
+
+  <path d="M 590 254 C 590 295, 540 330, 502 358" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="560" y="305" font-size="11" fill="#57606a">2 &#183; raw model text</text>
+
+  <line x1="582" y1="384" x2="648" y2="384" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="460" y1="408" x2="460" y2="442" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <path d="M 560 362 C 800 340, 890 270, 890 190 C 890 130, 850 108, 662 108"
+        fill="none" stroke="#1a7f37" stroke-width="1.8" marker-end="url(#arrowGreen)"/>
+  <text x="760" y="145" text-anchor="middle" font-size="11" fill="#1a7f37">3 &#183; typed &amp; validated value</text>
+</svg>
