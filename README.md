@@ -115,7 +115,7 @@ prose, and a malformed first answer that self-repairs on retry:
 - **Build:** `swift build` — clean, zero warnings.
 - **Tests:** `swift test` — 89 tests, full XCTest suite.
 - **Coverage:** 100.00% line, function, and region coverage of the `StructuredOutputKit` library target (verified with `llvm-cov`).
-- **Lint:** a `.swiftlint.yml` matching the rest of the ecosystem is included; the `swiftlint` binary itself isn't installable in the sandbox this package was built in (no apt/brew/mint package, and building it from source pulls a prebuilt binary artifact from a GitHub release, which that sandbox's network policy blocks). The library sources were hand-checked line by line against every rule the config enables instead — see the screenshot below for the honest accounting.
+- **Lint:** `swiftlint lint --strict` — tool-verified (an earlier version of this README said `swiftlint` wasn't installable in the sandbox this package was originally built in and relied on a hand-review instead; that hand-review missed a real force-unwrap in `PromptBuilder.render`, since fixed). Two violations remain open — a 6-parameter function in `StructuredOutputDecoder` and cyclomatic complexity 11 in `JSONExtractor` — both require a real signature/control-flow refactor rather than a mechanical fix, so they're left as a tracked TODO instead of a rushed change.
 
 ![Test, coverage and lint results](Screenshots/tests.svg)
 

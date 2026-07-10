@@ -22,9 +22,9 @@ public enum PromptBuilder {
             let properties = schema.properties ?? [:]
             let required = Set(schema.required ?? [])
             let childIndent = indent + "  "
-            let fields = properties.keys.sorted().map { key -> String in
+            let fields = properties.sorted { $0.key < $1.key }.map { key, propertySchema -> String in
                 let marker = required.contains(key) ? "" : " (optional)"
-                let child = render(properties[key]!, indent: childIndent)
+                let child = render(propertySchema, indent: childIndent)
                 return "\(childIndent)\"\(key)\"\(marker): \(child)"
             }
             let body = fields.isEmpty ? "" : "\n" + fields.joined(separator: ",\n") + "\n\(indent)"
