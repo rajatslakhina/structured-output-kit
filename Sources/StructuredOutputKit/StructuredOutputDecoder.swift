@@ -62,14 +62,21 @@ public actor StructuredOutputDecoder {
             throw StructuredOutputError.invalidArgument(reason: "maxAttempts must be positive, got \(maxAttempts)")
         }
 
-        return try await attemptDecode(
-            type,
-            remainingAttempts: maxAttempts,
-            totalAttempts: maxAttempts,
-            lastText: nil,
-            lastError: nil,
-            generate: generate
+        let initialState = RetryState(
+            remainingAttempts: maxAttempts, totalAttempts: maxAttempts, lastText: nil, lastError: nil
         )
+        return try await attemptDecode(type, state: initialState, generate: generate)
+    }
+
+    /// Bundles `attemptDecode`'s recursion state into one value so the
+    /// method stays under SwiftLint's parameter-count limit without losing
+    /// any state a retry attempt needs — a private implementation detail,
+    /// not part of the public API.
+    private struct RetryState {
+        let remainingAttempts: Int
+        let totalAttempts: Int
+        let lastText: String?
+        let lastError: StructuredOutputError?
     }
 
     /// Recursive worker behind the retrying `decode(_:maxAttempts:generate:)`.
@@ -81,18 +88,15 @@ public actor StructuredOutputDecoder {
     /// trailing statement the compiler demands but a test can never exercise.
     private func attemptDecode<T: Decodable & JSONSchemaConvertible>(
         _ type: T.Type,
-        remainingAttempts: Int,
-        totalAttempts: Int,
-        lastText: String?,
-        lastError: StructuredOutputError?,
+        state: RetryState,
         generate: @Sendable (_ previousText: String?, _ previousError: StructuredOutputError?) async throws -> String
     ) async throws -> T {
-        let text = try await generate(lastText, lastError)
+        let text = try await generate(state.lastText, state.lastError)
         do {
             return try decode(type, from: text)
         } catch let error as StructuredOutputError {
-            let attemptsMade = totalAttempts - remainingAttempts + 1
-            if remainingAttempts <= 1 {
+            let attemptsMade = state.totalAttempts - state.remainingAttempts + 1
+            if state.remainingAttempts <= 1 {
                 throw StructuredOutputError.maxRetriesExceeded(
                     attempts: attemptsMade,
                     lastError: String(describing: error)
@@ -100,10 +104,12 @@ public actor StructuredOutputDecoder {
             }
             return try await attemptDecode(
                 type,
-                remainingAttempts: remainingAttempts - 1,
-                totalAttempts: totalAttempts,
-                lastText: text,
-                lastError: error,
+                state: RetryState(
+                    remainingAttempts: state.remainingAttempts - 1,
+                    totalAttempts: state.totalAttempts,
+                    lastText: text,
+                    lastError: error
+                ),
                 generate: generate
             )
         }

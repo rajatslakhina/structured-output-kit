@@ -68,38 +68,54 @@ public enum JSONExtractor {
 
         for (index, character) in characters.enumerated() {
             guard let closer = openers[character] else { continue }
-            var depth = 0
-            var inString = false
-            var previousWasEscape = false
+            if let span = balancedJSONSpan(in: characters, startingAt: index, opener: character, closer: closer) {
+                return span
+            }
+        }
+        return nil
+    }
 
-            for cursor in index..<characters.count {
-                let current = characters[cursor]
+    /// Walks forward from `index` tracking bracket depth and string literals,
+    /// returning the first depth-zero span (starting at `index`) that also
+    /// parses as valid JSON — split out of `firstBalancedJSONSpan` purely to
+    /// keep both functions' cyclomatic complexity low; behavior is unchanged.
+    private static func balancedJSONSpan(
+        in characters: [Character],
+        startingAt index: Int,
+        opener: Character,
+        closer: Character
+    ) -> String? {
+        var depth = 0
+        var inString = false
+        var previousWasEscape = false
 
-                if inString {
-                    if current == "\"" && !previousWasEscape {
-                        inString = false
-                    }
-                    previousWasEscape = (current == "\\") && !previousWasEscape
-                    continue
+        for cursor in index..<characters.count {
+            let current = characters[cursor]
+
+            if inString {
+                if current == "\"" && !previousWasEscape {
+                    inString = false
                 }
+                previousWasEscape = (current == "\\") && !previousWasEscape
+                continue
+            }
 
-                switch current {
-                case "\"":
-                    inString = true
-                    previousWasEscape = false
-                case character:
-                    depth += 1
-                case closer:
-                    depth -= 1
-                    if depth == 0 {
-                        let span = String(characters[index...cursor])
-                        if isValidJSON(span) {
-                            return span
-                        }
+            switch current {
+            case "\"":
+                inString = true
+                previousWasEscape = false
+            case opener:
+                depth += 1
+            case closer:
+                depth -= 1
+                if depth == 0 {
+                    let span = String(characters[index...cursor])
+                    if isValidJSON(span) {
+                        return span
                     }
-                default:
-                    break
                 }
+            default:
+                break
             }
         }
         return nil
